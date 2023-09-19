@@ -10,7 +10,22 @@ from treys import Card
 evaluator = Evaluator()
 omaha_evaluator = PLOEvaluator()
 
-df = pd.read_csv('/Users/iting/Downloads/actual_omaha.csv')
+df = pd.read_csv('/Users/iting/Downloads/14_18.csv')
+
+def evaluate_poker_hand(cards):
+    card1, card2 = cards[:2], cards[2:]
+
+    rank1, suit1 = card1[:-1], card1[-1]
+    rank2, suit2 = card2[:-1], card2[-1]
+
+    if rank1 == rank2:
+        return "Pair", cards
+    else:
+        high_card = max(rank1, rank2)
+        return "High Card", cards
+
+
+
 
 
 df['pocket_cards'] = None 
@@ -60,12 +75,27 @@ for index, row in df.iterrows():
 ## double check
 print(df.head(1))
 
+
+
+
 #Iterate through the rows
 for index, row in df.iterrows():
     table_value = row['table']
     pocket_card_value = row['pocket_cards']
     stripped_cards_value = row['stripped_cards']
     game_mode = row['game_mode'] 
+
+
+    if len(stripped_cards_value) == 4:
+        # Hold'em hand with 2 cards, only pocket cards. Just check for high card and pair
+        hand_type, cards = evaluate_poker_hand(stripped_cards_value)
+        df.at[index, 'evaluation_result'] = hand_type
+        df.at[index, 'best_five_cards'] = cards
+
+    if len(stripped_cards_value) == 8:
+        # Omaha hand with 4 cards, only pocket cards. Need to check for 
+        df.at[index, 'best_five_cards'] = stripped_cards_value
+
 
     # Check if the length of 'stripped_cards' is greater than or equal to 10
     if len(stripped_cards_value) >= 10:
@@ -102,14 +132,6 @@ csv_file_path = '/Users/iting/Downloads/output_snippet.csv'
 
 # Export the DataFrame to a CSV file
 df.to_csv(csv_file_path, index=False)  
-
-
-
-
-
-
-
-
 
 
 
