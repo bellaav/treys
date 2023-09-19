@@ -50,12 +50,12 @@ class Evaluator:
         if cards[0] & cards[1] & cards[2] & cards[3] & cards[4] & 0xF000:
             handOR = (cards[0] | cards[1] | cards[2] | cards[3] | cards[4]) >> 16
             prime = Card.prime_product_from_rankbits(handOR)
-            return self.table.flush_lookup[prime], None
+            return self.table.flush_lookup[prime]
 
         # otherwise
         else:
             prime = Card.prime_product_from_hand(cards)
-            return self.table.unsuited_lookup[prime], None
+            return self.table.unsuited_lookup[prime]
 
     def _six(self, cards: Sequence[int]) -> int:
         """
@@ -67,12 +67,11 @@ class Evaluator:
 
         for combo in itertools.combinations(cards, 5):
 
-            score, ignore = self._five(combo)
+            score = self._five(combo)
             if score < minimum:
                 minimum = score
-                final_combo = combo
 
-        return minimum, final_combo
+        return minimum
 
     def _seven(self, cards: Sequence[int]) -> int:
         """
@@ -84,12 +83,11 @@ class Evaluator:
 
         for combo in itertools.combinations(cards, 5):
             
-            score, ignore = self._five(combo)
+            score = self._five(combo)
             if score < minimum:
                 minimum = score
-                final_combo = combo
 
-        return minimum, final_combo
+        return minimum
 
     def get_rank_class(self, hr: int) -> int:
         """
@@ -196,9 +194,8 @@ class PLOEvaluator(Evaluator):
 
         for hand_combo in itertools.combinations(hand, 2):
             for board_combo in itertools.combinations(board, 3):
-                score,ignore = Evaluator._five(self, list(board_combo) + list(hand_combo))
+                score = Evaluator._five(self, list(board_combo) + list(hand_combo))
                 if score < minimum:
                     minimum = score
-                    final_combo = list(board_combo) + list(hand_combo)
 
-        return minimum, final_combo
+        return minimum

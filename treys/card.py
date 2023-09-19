@@ -40,19 +40,19 @@ class Card:
         'h': 2,  # hearts
         'd': 4,  # diamonds
         'c': 8,  # clubs
-        's': 1, # spades (unicode)
-        'h': 2, # hearts (unicode)
-        'd': 4, # diamonds (unicode)
-        'c': 8, # clubs (unicode)
+        '\u2660': 1, # spades (unicode)
+        '\u2764': 2, # hearts (unicode)
+        '\u2666': 4, # diamonds (unicode)
+        '\u2663': 8, # clubs (unicode)
     }
     INT_SUIT_TO_CHAR_SUIT: str = 'xshxdxxxc'
 
     # for pretty printing
     PRETTY_SUITS: dict[int, str] = {
-        1: 's',   # spades
-        2: 'h',   # hearts
-        4: 'd',   # diamonds
-        8: 'c'    # clubs
+        1: chr(9824),   # spades
+        2: chr(9829),   # hearts
+        4: chr(9830),   # diamonds
+        8: chr(9827)    # clubs
     }
 
     SUIT_COLORS: dict[int, str] = {
@@ -199,7 +199,7 @@ class Card:
 
         r = Card.STR_RANKS[rank_int]
 
-        return "{}{}".format(r,s)
+        return "[{}{}]".format(r,s)
 
     @staticmethod
     def print_pretty_card(card_int: int) -> None:
@@ -213,13 +213,14 @@ class Card:
         """
         Expects a list of cards in integer form.
         """
-        output = []
+        output = " "
         for i in range(len(card_ints)):
             c = card_ints[i]
             if i != len(card_ints) - 1:
-                output.append (Card.int_to_pretty_str(c))
+                output += str(Card.int_to_pretty_str(c)) + ","
             else:
-                output.append (Card.int_to_pretty_str(c))
+                output += str(Card.int_to_pretty_str(c)) + " "
+    
         return output
 
     @staticmethod
