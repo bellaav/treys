@@ -193,10 +193,9 @@ class PLOEvaluator(Evaluator):
 
     def evaluate(self, hand: list[int], board: list[int]) -> int:
         minimum = LookupTable.MAX_HIGH_CARD
-
         for hand_combo in itertools.combinations(hand, 2):
             for board_combo in itertools.combinations(board, 3):
-                score,ignore = Evaluator._five(self, list(board_combo) + list(hand_combo))
+                score,ignore = Evaluator._five(self, list(hand_combo) + list(board_combo))
                 if score < minimum:
                     minimum = score
                     final_combo = list(board_combo) + list(hand_combo)

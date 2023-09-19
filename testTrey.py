@@ -10,7 +10,7 @@ from treys import Card
 evaluator = Evaluator()
 omaha_evaluator = PLOEvaluator()
 
-df = pd.read_csv('/Users/iting/Downloads/14_18.csv')
+df = pd.read_csv('/Users/iting/Downloads/omaha_fix.csv')
 
 def evaluate_poker_hand(cards):
     card1, card2 = cards[:2], cards[2:]
@@ -23,10 +23,6 @@ def evaluate_poker_hand(cards):
     else:
         high_card = max(rank1, rank2)
         return "High Card", cards
-
-
-
-
 
 df['pocket_cards'] = None 
 df['table'] = None
@@ -76,8 +72,6 @@ for index, row in df.iterrows():
 print(df.head(1))
 
 
-
-
 #Iterate through the rows
 for index, row in df.iterrows():
     table_value = row['table']
@@ -95,6 +89,7 @@ for index, row in df.iterrows():
     if len(stripped_cards_value) == 8:
         # Omaha hand with 4 cards, only pocket cards. Need to check for 
         df.at[index, 'best_five_cards'] = stripped_cards_value
+        pass
 
 
     # Check if the length of 'stripped_cards' is greater than or equal to 10
@@ -115,7 +110,7 @@ for index, row in df.iterrows():
             else:
                 print("Weird, you shouldn't be here")
         elif game_mode == 'omaha':
-            best_hand, combo = omaha_evaluator.evaluate(table_value, pocket_card_value)
+            best_hand, combo = omaha_evaluator.evaluate(pocket_card_value, table_value)
 
             df.at[index, 'evaluation_result'] = evaluator.class_to_string(evaluator.get_rank_class(best_hand))
             if isinstance(combo, list):
@@ -128,7 +123,8 @@ for index, row in df.iterrows():
             "No game mode found"
 
 
-csv_file_path = '/Users/iting/Downloads/output_snippet.csv'
+print(df.head(1))
+csv_file_path = '/Users/iting/Downloads/final_result.csv'
 
 # Export the DataFrame to a CSV file
 df.to_csv(csv_file_path, index=False)  
